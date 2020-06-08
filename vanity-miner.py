@@ -38,9 +38,12 @@ def bitcoin_address(secret_key):
 
 def search_address():
     while True:
+        if event.is_set():
+            break
 
         secret = random_secret()
         address, pubkey = bitcoin_address(secret)
+
         if search_addr in address[0:len(search_addr)]:
             event.set()
             return secret, pubkey, address
@@ -62,12 +65,17 @@ if __name__ == "__main__":
 
     pool.close()
     event.wait()
-    solution = results[0].get()
+
+    solution = []
+    for i in results:
+        if not (i.get() is None):
+            solution = i.get()
+
     pool.terminate()
 
-    assert(bitcoin.is_privkey(solution[0]))
-    assert(bitcoin.is_pubkey(solution[1]))
-    assert(bitcoin.is_address(solution[2]))
+    assert (bitcoin.is_privkey(solution[0]))
+    assert (bitcoin.is_pubkey(solution[1]))
+    assert (bitcoin.is_address(solution[2]))
 
     print("Private key in HEX :", bitcoin.encode_privkey(solution[0], 'hex'), os.linesep + "Public key in HEX :",
           bitcoin.encode_pubkey(solution[1], 'hex'),
