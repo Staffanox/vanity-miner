@@ -37,16 +37,17 @@ def bitcoin_address(secret_key):
 
 
 def search_address():
+    tries = 0
     while True:
         if event.is_set():
-            break
+            return tries
 
         secret = random_secret()
         address, pubkey = bitcoin_address(secret)
-
+        tries += 1
         if search_addr in address[0:len(search_addr)]:
             event.set()
-            return secret, pubkey, address
+            return secret, pubkey, address, tries
 
 
 if __name__ == "__main__":
@@ -67,12 +68,17 @@ if __name__ == "__main__":
     event.wait()
 
     solution = []
+    amount = []
     for i in results:
-        if not (i.get() is None):
+        if not (isinstance(i.get(), int)):
             solution = i.get()
+            amount.append(i.get()[3])
+        else:
+            amount.append(i.get())
 
     pool.terminate()
 
+    assert(len(amount) == processors)
     assert (bitcoin.is_privkey(solution[0]))
     assert (bitcoin.is_pubkey(solution[1]))
     assert (bitcoin.is_address(solution[2]))
@@ -82,5 +88,7 @@ if __name__ == "__main__":
           os.linesep + "Address :", solution[2])
 
     end = time.time()
-
-    print("Elapsed Time: %.4fs" % float(end - start))
+    hashes = sum(amount)
+    print(os.linesep+"Elapsed Time: %.4fs" % float(end - start))
+    print("Amount of tries : %d" % hashes)
+    print("Hash power :  %.4f h/s" % (hashes / float(end - start)))
