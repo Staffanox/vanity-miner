@@ -46,5 +46,11 @@
 
 ## Examples
 
+**Without arguments**
 ![no_pattern](screenshots/no_argument.png)
+
+**Only with Pattern**
 ![with_pattern](screenshots/with_arguments.png)
+
+**Pattern and CPU count**
+![full_pattern](screenshots/full_arguments.png)
