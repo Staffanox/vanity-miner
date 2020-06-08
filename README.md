@@ -1,15 +1,15 @@
 # Vanity Miner
 
 
-##Note
+## Note
 This program **will stress** all provided cores to the maximum, if you provide all cores your computer might become unresponsive
 It could also deal **fatal** damage to your CPU, so be careful when using it
 
-##Requirements
+## Requirements
 
 * Python 3.X
 
-##Packages
+## Packages
 
 * bitcoin (by  vbuterin)
 
