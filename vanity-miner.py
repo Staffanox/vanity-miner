@@ -65,6 +65,10 @@ if __name__ == "__main__":
     solution = results[0].get()
     pool.terminate()
 
+    assert(bitcoin.is_privkey(solution[0]))
+    assert(bitcoin.is_pubkey(solution[1]))
+    assert(bitcoin.is_address(solution[2]))
+
     print("Private key in HEX :", bitcoin.encode_privkey(solution[0], 'hex'), os.linesep + "Public key in HEX :",
           bitcoin.encode_pubkey(solution[1], 'hex'),
           os.linesep + "Address :", solution[2])
