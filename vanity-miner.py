@@ -27,6 +27,13 @@ def check_sys_arg():
     return '1', 1
 
 
+def base58_check(addr):
+    base58_chars = ['O', '0', 'l', 'I']
+    for word in base58_chars:
+        if word in addr:
+            raise ValueError("Illegal address characters", base58_chars)
+
+
 def random_secret():
     return bitcoin.random_key()
 
@@ -53,6 +60,7 @@ def search_address():
 if __name__ == "__main__":
 
     search_addr, processors = check_sys_arg()
+    base58_check(search_addr)
     pool = mp.Pool(processors)
     start = time.time()
     results = []
@@ -78,7 +86,7 @@ if __name__ == "__main__":
 
     pool.terminate()
 
-    assert(len(amount) == processors)
+    assert (len(amount) == processors)
     assert (bitcoin.is_privkey(solution[0]))
     assert (bitcoin.is_pubkey(solution[1]))
     assert (bitcoin.is_address(solution[2]))
@@ -89,6 +97,7 @@ if __name__ == "__main__":
 
     end = time.time()
     hashes = sum(amount)
-    print(os.linesep+"Elapsed Time: %.4fs" % float(end - start))
+    runtime = float(end-start)
+    print(os.linesep + "Elapsed Time: %.4fs" % runtime)
     print("Amount of tries : %d" % hashes)
-    print("Hash power :  %.4f h/s" % (hashes / float(end - start)))
+    print("Hash power :  %.4f h/s" % (hashes / runtime))
