@@ -29,9 +29,14 @@ def check_sys_arg():
 
 def base58_check(addr):
     base58_chars = ['O', '0', 'l', 'I']
+
     for word in base58_chars:
         if word in addr:
             raise ValueError("Illegal address characters", base58_chars)
+
+    for letter in addr:
+        if not letter.isascii() or not letter.isalnum():
+            raise ValueError("Illegal address characters", letter)
 
 
 def random_secret():
@@ -59,10 +64,10 @@ def search_address():
 
 if __name__ == "__main__":
 
+    start = time.time()
     search_addr, processors = check_sys_arg()
     base58_check(search_addr)
     pool = mp.Pool(processors)
-    start = time.time()
     results = []
 
     print("Searching for", search_addr)
@@ -71,7 +76,6 @@ if __name__ == "__main__":
     for i in range(processors):
         result = pool.apply_async(search_address)
         results.append(result)
-
     pool.close()
     event.wait()
 
@@ -97,7 +101,7 @@ if __name__ == "__main__":
 
     end = time.time()
     hashes = sum(amount)
-    runtime = float(end-start)
+    runtime = float(end - start)
     print(os.linesep + "Elapsed Time: %.4fs" % runtime)
     print("Amount of tries : %d" % hashes)
     print("Hash power :  %.4f h/s" % (hashes / runtime))
