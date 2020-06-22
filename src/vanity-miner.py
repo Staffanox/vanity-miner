@@ -4,25 +4,14 @@ import bitcoin
 import time
 import sys
 import os
+
 from humanfriendly import format_timespan
+from counter import Counter
 
 event = mp.Event()
 search = '1'
 processors = 1
-
-
-class Counter(object):
-    def __init__(self):
-        self.val = mp.Value('i', 0)
-
-    def increment(self, n=1):
-        with self.val.get_lock():
-            self.val.value += n
-
-    @property
-    def value(self):
-        return self.val.value
-
+case_sensitivity = True
 
 counter = Counter()
 counter.__init__()
@@ -36,12 +25,16 @@ def check_cpu_count(cpu_count: int):
 
 
 def check_sys_arg():
-    if len(sys.argv) == 2:
+    if '-l' in sys.argv:
+        global case_sensitivity
+        case_sensitivity = False
+    if len(sys.argv) <= 2:
         return ('1' + sys.argv[1]), 1
-    elif len(sys.argv) == 3:
+    elif len(sys.argv) >= 3:
         if sys.argv[2].isnumeric():
             return ('1' + sys.argv[1]), check_cpu_count(int(sys.argv[2]))
         return ('1' + sys.argv[1]), 1
+
     return '1', 1
 
 
@@ -79,15 +72,21 @@ def search_address():
 
         if estimated_time < 0:
             estimated_time = 0
-        if counter.value % 100 == 0:
+        if counter.value % (processors * 20) == 0:
             print(int((counter.value / frequency) * 100), "%", "| Tries to freq :", (counter.value, frequency),
                   "| Hashing power: %.2f h/s" % hashing_power,
-                  "| Average remaining time: ", format_timespan(estimated_time),
+                  "| Average remaining time: %s" % format_timespan(estimated_time),
                   end='\r')
 
-        if search_addr.lower() in address[0:len(search_addr)].lower():
-            event.set()
-            return secret, pubkey, address
+        if case_sensitivity is True:
+            if search_addr in address[0:len(search_addr)]:
+                event.set()
+                return secret, pubkey, address
+        else:
+            if search_addr.lower() in address[0:len(search_addr)].lower():
+                event.set()
+                return secret, pubkey, address
+
 
 
 if __name__ == "__main__":
@@ -95,11 +94,15 @@ if __name__ == "__main__":
     start = time.time()
     search_addr, processors = check_sys_arg()
     base58_check(search_addr)
-    frequency = 58 ** (len(search_addr) - 1)
+    if case_sensitivity is True:
+        frequency = 58 ** (len(search_addr) - 1)
+    else:
+        frequency = 58 ** (len(search_addr) - 1) / 2
+
     pool = mp.Pool(processors)
     results = []
 
-    print("Searching for", search_addr)
+    print("Searching for %s" % search_addr)
     print("Using %d processors" % processors)
 
     for i in range(processors):
