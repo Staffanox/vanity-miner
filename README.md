@@ -40,17 +40,15 @@
 * The script works with system arguments
 * You can specify the pattern to look for in the first argument
 * And the amount of cpu cores to look for it in the second argument
+* -l toggles case sensitivity
 
-
+> python vanity-miner.py <*vanity prefix*> <*cpu  count*> <*case sensitivity*>
 
 
 ## Examples
 
-**Without arguments**
-![no_pattern](screenshots/no_argument.png)
+**Case sensitive**
+![no_lower](screenshots/sensitive.png)
 
-**Only with Pattern**
-![with_pattern](screenshots/with_arguments.png)
-
-**Pattern and CPU count**
-![full_pattern](screenshots/full_arguments.png)
+**Case insensitive**
+![lowercase](screenshots/insensitive.png)
