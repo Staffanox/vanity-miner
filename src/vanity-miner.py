@@ -71,7 +71,7 @@ def search_address():
         estimated_time = int((frequency - counter.value) / hashing_power)
         elapsed_time = time.time() - start
 
-        if counter.value % (processors * 100) == 0:
+        if counter.value % (processors * 20) == 0:
             if estimated_time <= 0:
                 print("\r", int((counter.value / frequency) * 100), "%", "| Tries to freq :",
                       (counter.value, frequency),
@@ -134,7 +134,12 @@ if __name__ == "__main__":
 
     runtime = float(time.time() - start)
     hash_rate = counter.value / runtime
+    percent = (counter.value / frequency)
+    time_longer_than_avg = runtime - (runtime / percent)
+    print(time_longer_than_avg)
+    time.sleep(1)
     print(os.linesep + "Elapsed Time: %.4fs" % runtime)
+
     print("Amount of tries : %d" % counter.value)
     print("Hash power :  %.4f h/s" % hash_rate)
 
@@ -147,9 +152,20 @@ if __name__ == "__main__":
 
         address.close()
 
-        with open("metadata.txt", 'w') as meta_data:
-            meta_data.write(
+        with open("data.txt", 'w') as data:
+            data.write(
                 "Used " + str(processors) + " out of " + str(os.cpu_count()) + " available processors" + os.linesep)
-            meta_data.write("Elapsed time : " + str(format_timespan(runtime)) + os.linesep)
-            meta_data.write("Hash power during mining was : %.4f h/s" % hash_rate + os.linesep)
-        meta_data.close()
+            data.write("Elapsed time : " + str(format_timespan(runtime)) + os.linesep)
+            data.write("Hash power during mining was : %.4f h/s" % hash_rate + os.linesep)
+            data.write("It takes an average of " + str(frequency) + " tries for a solution"+os.linesep)
+            data.write("It took " + str(counter.value) + " tries to find a solution"+os.linesep)
+
+            if time_longer_than_avg < 0:
+                data.write(
+                    "It was " + format_timespan(abs(time_longer_than_avg)) + " faster than the average" + os.linesep)
+
+            else:
+                data.write(
+                    "It was " + format_timespan(time_longer_than_avg) + " slower than the average" + os.linesep)
+
+        data.close()
