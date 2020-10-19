@@ -137,13 +137,16 @@ if __name__ == "__main__":
     percent = (counter.value / frequency)
     time_longer_than_avg = runtime - (runtime / percent)
     print(time_longer_than_avg)
+
+    # sleep for sync of runtime and hash_rate
     time.sleep(1)
     print(os.linesep + "Elapsed Time: %.4fs" % runtime)
-
     print("Amount of tries : %d" % counter.value)
     print("Hash power :  %.4f h/s" % hash_rate)
 
     if "-d" in sys.argv:
+        os.chdir("../files")
+
         with open("address.txt", 'w') as address:
             address.write("Private key in HEX : " + bitcoin.encode_privkey(solution[0], 'hex') + os.linesep)
             address.write("Public key in HEX : " +
@@ -157,8 +160,9 @@ if __name__ == "__main__":
                 "Used " + str(processors) + " out of " + str(os.cpu_count()) + " available processors" + os.linesep)
             data.write("Elapsed time : " + str(format_timespan(runtime)) + os.linesep)
             data.write("Hash power during mining was : %.4f h/s" % hash_rate + os.linesep)
-            data.write("It takes an average of " + str(frequency) + " tries for a solution"+os.linesep)
-            data.write("It took " + str(counter.value) + " tries to find a solution"+os.linesep)
+            data.write(os.linesep)
+            data.write("It takes an average of " + str(frequency) + " tries for a solution" + os.linesep)
+            data.write("It took " + str(counter.value) + " tries to find a solution" + os.linesep)
 
             if time_longer_than_avg < 0:
                 data.write(
