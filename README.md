@@ -41,8 +41,8 @@
 * You can specify the pattern to look for in the first argument
 * And the amount of cpu cores to look for it in the second argument
 * -l toggles case sensitivity
-
-> python vanity-miner.py <*vanity prefix*> <*cpu  count*> <*case sensitivity*>
+* With -w the address data and runtime data are saved
+> python vanity-miner.py <*vanity prefix*> <*cpu  count*> <*case sensitivity*> <*save to file*>
 
 
 ## Examples
