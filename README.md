@@ -45,6 +45,10 @@
 > python vanity-miner.py <*vanity prefix*> <*cpu  count*> <*case sensitivity*> <*save to file*>
 
 
+## Data
+* Is given in terminal
+* If saved it can be located in the files folder
+
 ## Examples
 
 **Case sensitive**
