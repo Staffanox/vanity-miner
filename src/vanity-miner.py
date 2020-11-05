@@ -144,7 +144,12 @@ if __name__ == "__main__":
     print("Hash power :  %.4f h/s" % hash_rate)
 
     if "-w" in sys.argv:
-        os.chdir("../files")
+
+        if os.path.isdir("../files"):
+            os.chdir("../files")
+        else:
+            os.mkdir("../files")
+            os.chdir("../files")
 
         with open("address.txt", 'w') as address:
             address.write("Private key in HEX : " + bitcoin.encode_privkey(solution[0], 'hex') + os.linesep)
