@@ -136,7 +136,6 @@ if __name__ == "__main__":
     hash_rate = counter.value / runtime
     percent = (counter.value / frequency)
     time_longer_than_avg = runtime - (runtime / percent)
-    print(time_longer_than_avg)
 
     # sleep for sync of runtime and hash_rate
     time.sleep(1)
