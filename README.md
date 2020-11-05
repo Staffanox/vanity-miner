@@ -31,7 +31,7 @@
 * As mentioned earlier the only way to get a vanity address is by **brute-force**
 * The script generates a private key, derives a public key from it, then further derives an address from the public key
 * It then checks the newly generated address with the given pattern, if it matches you will receive the private key, public key and vanity address
-* If however the new address doesn't match our pattern, it will generate another set of private key, public key  and address until it matches
+* If however the new address doesn't match your pattern, it will generate another set of private key, public key  and address until it matches
 
 
 

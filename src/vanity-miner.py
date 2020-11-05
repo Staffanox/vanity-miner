@@ -144,7 +144,7 @@ if __name__ == "__main__":
     print("Amount of tries : %d" % counter.value)
     print("Hash power :  %.4f h/s" % hash_rate)
 
-    if "-d" in sys.argv:
+    if "-w" in sys.argv:
         os.chdir("../files")
 
         with open("address.txt", 'w') as address:
